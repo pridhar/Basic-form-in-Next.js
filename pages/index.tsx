@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import $ from 'jquery';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import bg from '../public/Solid-Color-Backgrounds.jpg';
 
 interface FormData {
@@ -11,7 +11,7 @@ interface FormData {
 }
 
 const Home = () => {
-  const [form, setForm] = useState<FormData>({firstname: '', lastname: '', email: '',mobile: ''})
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
 
   async function create(data: FormData) {
     try {
@@ -24,16 +24,8 @@ const Home = () => {
         }).then(response => response.json())
         .then(data => {
         $('#show').html(data.message)
-        }).then(() => {setForm({firstname: '', lastname: '', email: '',mobile: ''})
+        reset();
       })
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  const handleSubmit = async (data: FormData) => {
-    try {
-     create(data) 
     } catch (error) {
       console.log(error);
     }
@@ -53,31 +45,47 @@ const Home = () => {
       <div className="container-fluid">
         <div className="row"><div className="col-md-4"></div>
           <div className="col-md-3">
-            <form  onSubmit={e => {e.preventDefault()
-              handleSubmit(form)}}>
+            <form  onSubmit={handleSubmit(create)}>
               <div className="form-group">
-                <input type="text" className="form-control"
+                <input type="text"  className={`form-control ${
+                            errors.firstname ? 'form-control is-invalid' : null
+                          }`}
                           placeholder="First Name"
-                          value={form.firstname}
-                          onChange={e => setForm({...form, firstname: e.target.value})} />
+                          {...register('firstname', { required: {
+                            value: true,
+                            message: 'You must enter your First Name',
+                          }, })}
+                        />
+                       <div className="invalid-feedback">{errors?.firstname?.message}</div>
               </div>
               <div className="form-group">
-                <input type="text" className="form-control"
+                <input type="text" className={`form-control ${
+                            errors.lastname ? 'form-control is-invalid' : null
+                          }`}
                           placeholder="Last Name"
-                          value={form.lastname}
-                          onChange={e => setForm({...form, lastname: e.target.value})} />
+                          {...register('lastname', { required: {
+                            value: true,
+                            message: 'You must enter your Last Name',
+                          }, })}
+                        />
+                       <div className="invalid-feedback">{errors?.lastname?.message}</div>
               </div>
               <div className="form-group">
-                <input type="text" className="form-control"
+                <input type="text" className={`form-control ${
+                            errors.email ? 'form-control is-invalid' : null
+                          }`}
                           placeholder="Email"
-                          value={form.email}
-                          onChange={e => setForm({...form, email: e.target.value})} />
+                          {...register('email', { required: {
+                            value: true,
+                            message: 'You must enter your Email',
+                          }, })}
+                        />
+                       <div className="invalid-feedback">{errors?.email?.message}</div>
               </div>
               <div className="form-group">
                 <input type="text" className="form-control"
-                          placeholder="mobile"
-                          value={form.mobile}
-                          onChange={e => setForm({...form, mobile: e.target.value})} />
+                          placeholder="Mobile No"
+                          {...register('mobile', { required: false })} />
               </div>
               <button className="btn btn-primary pl-3 pr-3" type="submit"> Save </button>
               <br></br><br></br>
