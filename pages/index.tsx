@@ -70,10 +70,7 @@ const Home = () => {
                             errors.email ? 'form-control is-invalid' : null
                           }`} placeholder="Email"
                           {...register('email', { required: 'You must enter your Email',
-                            pattern: {
-                              value: /^(([^<>?=()[\]{}\/+\\.,;:\s@"]+(\.[^<>?=()[\]{}\/+\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,3}))$/,
-                              message: "invalid Email"
-                            }
+                           
                           })}
                         />
                        <div className="invalid-feedback">{errors?.email?.message}</div>
@@ -83,12 +80,9 @@ const Home = () => {
                             errors.mobile ? 'form-control is-invalid' : null
                           }`} placeholder="Mobile No"
                           {...register('mobile', { required:  false,
-                            pattern: {
-                              value: /^(\+\d{1,3}[- ]?)?\d{10}$/,
-                              message: "invalid Phone No"
-                            }
+                           
                           })} />
-                          <div className="invalid-feedback">{errors?.mobile?.message}</div>
+                          
               </div><br></br>
               <button className="btn btn-primary pl-3 pr-3" type="submit"> Save </button>
               <br></br><br></br>
