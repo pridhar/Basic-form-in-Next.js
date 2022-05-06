@@ -1,4 +1,3 @@
-// utility regex
 import Head from 'next/head';
 import $ from 'jquery';
 import { useForm } from 'react-hook-form';
