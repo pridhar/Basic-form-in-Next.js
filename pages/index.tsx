@@ -2,6 +2,7 @@ import Head from 'next/head';
 import $ from 'jquery';
 import { useForm } from 'react-hook-form';
 import bg from '../public/Solid-Color-Backgrounds.jpg';
+import { gql, useMutation } from '@apollo/client';
 
 interface FormData {
   firstname: string
@@ -10,22 +11,42 @@ interface FormData {
   mobile: string
 }
 
+
+const CreateUserMutation = gql`
+ mutation Createuser($firstname : String , $lastname : String, $email : String, $mobile : String) {
+    createuser(firstname: $firstname, lastname: $lastname, email: $email, mobile: $mobile) {
+      firstname
+      lastname
+      email
+      mobile
+    }
+  }
+`;
+
 const Home = () => {
+  const [createuser] = useMutation(CreateUserMutation);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
 
   async function create(data: FormData) {
+    const { firstname, lastname, email, mobile } = data;
+    const variables = { firstname, lastname ,email, mobile };
     try {
-      fetch('http://localhost:3000/api/create', {
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: 'POST'
-        }).then(response => response.json())
-        .then(data => {
-        $('#show').html(data.message)
-        reset();
+      createuser({ variables })
+      .then(data => {
+      $('#show').html('Welcome ' + firstname);
+      reset();
       })
+      /* fetch('http://localhost:3000/api/create', {
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          method: 'POST'
+          }).then(response => response.json())
+          .then(data => {
+          $('#show').html(data.message)
+          reset();
+         })*/
     } catch (error) {
       console.log(error);
     }
